@@ -21,6 +21,8 @@ class DaiBookViewer extends GenericPlugin {
 			if ($this->getEnabled($mainContextId)) {
 				HookRegistry::register('ArticleHandler::view::galley', array($this, 'articleCallback'), HOOK_SEQUENCE_LAST);
 				HookRegistry::register('IssueHandler::view::galley', array($this, 'issueCallback'), HOOK_SEQUENCE_LAST);
+				HookRegistry::register('CatalogBookHandler::view', array($this, 'bookCallback'), HOOK_SEQUENCE_LATE);
+
 				AppLocale::requireComponents(LOCALE_COMPONENT_APP_COMMON);
 			}
 			return true;
@@ -109,6 +111,33 @@ class DaiBookViewer extends GenericPlugin {
 			return true;
 		}
 
+		return false;
+	}
+
+	/**
+	 * Callback that renders the book pdf.
+	 * @param $hookName string
+	 * @param $args array
+	 * @return boolean
+	 */
+	function bookCallback($hookName, $args) {
+		$publishedMonograph =& $args[1];
+		$publicationFormat =& $args[2];
+		$submissionFile =& $args[3];
+
+		if ($submissionFile->getFileType() == 'application/pdf') {
+			$request = Application::getRequest();
+			$router = $request->getRouter();
+			$dispatcher = $request->getDispatcher();
+			$templateMgr = TemplateManager::getManager($request);
+			$templateMgr->assign(array(
+				'pluginUrl' => $request->getBaseUrl() . DIRECTORY_SEPARATOR . $this->getPluginPath(),
+				'pdfUrl' => str_replace("view", "download", $request->getRequestPath())
+			));
+
+			$templateMgr->display($this->getTemplateResource('display.tpl'));
+			return true;
+		}
 		return false;
 	}
 
