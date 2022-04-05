@@ -10876,9 +10876,11 @@ var PDFViewerApplication = {
 		if (typeof parameters.url !== "undefined") {
 			var split = parameters.url.match(/(.*)\/([^/\\&\?]+\.\w{3,4})/);
 			identifier.url = parameters.url;
+			if(split) {
 			identifier.path = split[1];
 			if (typeof parameters.filename === "undefined") {
 				identifier.filename = split[2]
+			}
             }
         }
 
