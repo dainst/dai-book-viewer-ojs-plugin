@@ -1,3 +1,7 @@
+# ⚠️ Deprecated ⚠️
+We moved back to the default PDF viewer as of OJS/OMP 3.3.0.
+
+
 # DAI Book Viewer
 A PDF viewer for OJS 3.0.x based on OJS' pdfJsViewer
 
